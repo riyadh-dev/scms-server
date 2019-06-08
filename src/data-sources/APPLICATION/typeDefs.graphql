@@ -1,0 +1,31 @@
+type Review {
+	reviewer: User!
+	decision: Boolean!
+	comment: String!
+}
+
+interface Application {
+	_id: ID!
+	applicant: User!
+	submissionYear: String!
+	reviews: [Review]
+	refuses: Int!
+	accepts: Int!
+	finalDecision: Boolean!
+}
+
+extend type Query {
+	applications: [Application]
+	application(_id: ID!): Application
+	applicationsByApplicant(_id: ID!): [Application]
+}
+
+input reviewApplicationInput {
+	decision: Boolean!
+	comment: String!
+	applicationID: ID!
+}
+
+extend type Mutation {
+	reviewApplication(input: reviewApplicationInput!): Application!
+}
