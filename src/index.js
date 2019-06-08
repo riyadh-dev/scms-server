@@ -56,8 +56,8 @@ app.get('/*', (_, res) => {
 	res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
 });
 
-app.listen(process.env.APP_PORT, () =>
-	console.log(`Server URL: http://localhost:${process.env.APP_PORT}${server.graphqlPath}`)
+app.listen(process.env.PORT, () =>
+	console.log(`Server URL: http://localhost:${process.env.PORT}${server.graphqlPath}`)
 );
 
 
