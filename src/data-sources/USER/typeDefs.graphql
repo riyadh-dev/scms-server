@@ -1,0 +1,89 @@
+type Publication {
+	title: String!
+	doi: String!
+}
+
+input PublicationInput {
+	title: String!
+	doi: String!
+}
+
+enum Role {
+	FACULTY_MEMBER
+	PHD_STUDENT
+	SC_MEMBER
+	SC_PRESIDENT
+}
+
+enum Gender {
+	FEMALE
+	MALE
+}
+
+enum Department {
+	POWER_AND_CONTROL
+	ELECTRONICS
+	FUNDAMENTAL_EDUCATION
+}
+
+enum Major {
+	ELECTRONICS
+	POWER
+	CONTROL
+	TELECOMMUNICATION
+}
+
+type User {
+	_id: ID!
+	firstName: String
+	lastName: String
+	gender: Gender!
+	department: Department!
+	major: Major!
+	option: String
+	roles: [Role!]!
+	email: String
+}
+
+input tokenInput {
+	email: String!
+	password: String!
+}
+
+type Query {
+	users: [User!]
+	usersByRole(role: Role!): [User!]
+	user(_id: ID!): User
+	userByEmail(email: String!): User
+	token (input: tokenInput): String!
+}
+
+input addUserInput {
+	firstName: String
+	lastName: String
+	gender: Gender!
+	department: Department!
+	major: Major!
+	option: String
+	roles: [Role!]!
+	email: String
+	password: String!
+}
+
+input updateUserInput {
+	firstName: String
+	lastName: String
+	gender: Gender!
+	department: Department!
+	major: Major!
+	option: String
+	roles: [Role!]!
+	email: String
+	password: String!
+}
+
+type Mutation {
+	addUser(input: addUserInput!): User!
+	updateUser(input: updateUserInput!): User!
+	deleteUser(_id: ID!): String!
+}
