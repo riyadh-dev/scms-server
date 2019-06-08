@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev-server": "nodemon -r dotenv/config index.js",
 		"debug-server": "nodemon inspect -r dotenv/config index.js",
+		"start": "node index.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Baatchia Riyadh",
