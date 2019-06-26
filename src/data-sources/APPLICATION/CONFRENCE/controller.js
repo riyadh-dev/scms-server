@@ -1,14 +1,17 @@
-const confrenceApplication = require('./model');
-
+const ConfrenceApplication = require('./model');
+const { canUserSubmit } = require('../utils');
 module.exports = {
-	getConfrenceApplications: async () => {
-		return await confrenceApplication.find().populate('applicant reviews.reviewer');
-	},
-
 	submitConfrenceApplication: async (input, context) => {
-		return await confrenceApplication.create({
-			applicant: context._id,
+		const activeSCSession = await canUserSubmit(context.user._id, 'CONFRENCE');
+		return await ConfrenceApplication.create({
+			applicant: context.user._id,
+			SCSession: activeSCSession._id,
 			...input
 		});
+	},
+
+	reSubmitConfrenceApplication: async (input) => {
+		const { applicationID: _id, ...application } = input;
+		return await ConfrenceApplication.findByIdAndUpdate(_id, application, { new: true });
 	}
 };

@@ -1,0 +1,32 @@
+type PromotionApplication implements Application {
+	_id: ID!
+	applicant: User!
+	reviews: [Review]
+	refuses: Int!
+	accepts: Int!
+	submittedAt: Date!
+	treated: Boolean!
+	finalDecision: Boolean!
+
+	recruitmentDate: Date!
+	confirmationDate: Date!
+	currentRank: String!
+	desiredRank: String!
+	PhDRegistrationsNumber: String!
+	lastPhDRegistrationYear: String!
+	teachingActivitiesLink: String!
+}
+
+input PromotionApplicationInput {
+	recruitmentDate: Date!
+	confirmationDate: Date!
+	currentRank: String!
+	desiredRank: String!
+	PhDRegistrationsNumber: String!
+	lastPhDRegistrationYear: String!
+	teachingActivitiesFile: Upload!
+}
+
+extend type Mutation {
+	submitPromotionApplication(input: PromotionApplicationInput!): PromotionApplication!
+}

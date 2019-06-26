@@ -1,0 +1,38 @@
+type ThesisTitleChangeApplication implements Application {
+	_id: ID!
+	applicant: User!
+	reviews: [Review]
+	refuses: Int!
+	accepts: Int!
+	submittedAt: Date!
+	treated: Boolean!
+	finalDecision: Boolean!
+
+	firstPhDRegistrationYear: String!
+	supervisor: String!
+	currentTitle: String!
+	desiredTitle: String!
+	cause: String!
+}
+
+input SubmitThesisTitleChangeApplicationInput {
+	firstPhDRegistrationYear: String!
+	supervisor: String!
+	currentTitle: String!
+	desiredTitle: String!
+	cause: String!
+}
+
+input ReSubmitThesisTitleChangeApplicationInput {
+	applicationID: ID!
+	firstPhDRegistrationYear: String!
+	supervisor: String!
+	currentTitle: String!
+	desiredTitle: String!
+	cause: String!
+}
+
+extend type Mutation {
+	submitThesisTitleChangeApplication(input: SubmitThesisTitleChangeApplicationInput!): ThesisTitleChangeApplication!
+	reSubmitThesisTitleChangeApplication(input: ReSubmitThesisTitleChangeApplicationInput!): ThesisTitleChangeApplication!
+}

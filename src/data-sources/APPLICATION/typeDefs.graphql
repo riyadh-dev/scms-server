@@ -1,3 +1,12 @@
+enum ApplicationType {
+	ADD_THESIS_CO_SUPERVISOR
+	CONFIRMATION
+	CONFRENCE
+	INTERNSHIP
+	PROMOTION
+	THESIS_TITLE_CHANGE
+}
+
 type Review {
 	reviewer: User!
 	decision: Boolean!
@@ -7,17 +16,26 @@ type Review {
 interface Application {
 	_id: ID!
 	applicant: User!
-	submissionYear: String!
 	reviews: [Review]
 	refuses: Int!
 	accepts: Int!
+	submittedAt: Date!
+	treated: Boolean!
 	finalDecision: Boolean!
+}
+
+input applicationsBySCSessionAndTypeInput {
+	applicationType: ApplicationType, 
+	SCSessionID: ID!
 }
 
 extend type Query {
 	applications: [Application]
 	application(_id: ID!): Application
 	applicationsByApplicant(_id: ID!): [Application]
+	applicationsByType(applicationType: ApplicationType): [Application]
+	applicationsBySCSession(_id: ID!): [Application]
+	applicationsBySCSessionAndType(input: applicationsBySCSessionAndTypeInput): [Application]
 }
 
 input reviewApplicationInput {
@@ -26,6 +44,12 @@ input reviewApplicationInput {
 	applicationID: ID!
 }
 
+input giveApplicationFinalDecisionInput {
+	applicationID: ID!
+	finalDecision: Boolean!
+}
+
 extend type Mutation {
 	reviewApplication(input: reviewApplicationInput!): Application!
+	giveApplicationFinalDecision(input: giveApplicationFinalDecisionInput!): Application!
 }

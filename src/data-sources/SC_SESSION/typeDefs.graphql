@@ -1,0 +1,72 @@
+type StatisticsByApplicationType {
+	applications: Int!
+	accepted: Int!
+
+	electronicsDepartment: Int!
+	fundamentalEducationDepartment: Int!
+	powerAndContorlDepartment: Int!
+
+	controlMajor: Int!
+	electronicsMajor: Int!
+	powerMajor: Int!
+	telecommunicationMajor: Int!
+
+	female: Int!
+	male: Int!
+}
+
+type Statistics {
+	addThesisCoSupervisorApplication: StatisticsByApplicationType!
+	confirmationApplication: StatisticsByApplicationType!
+	confrenceApplication: StatisticsByApplicationType!
+	internshipApplication: StatisticsByApplicationType!
+	promotionApplication: StatisticsByApplicationType!
+	thesisTitleChangeApplication: StatisticsByApplicationType!
+}
+
+type SCSession {
+	_id: ID!
+	submissionsStartDate: Date!
+	submissionsEndDate: Date!
+	mettingDate: Date!
+	mettingAgenda: [String]!
+	hasStatistics: Boolean!
+	statistics: Statistics
+	canSubmit: Boolean!
+	canSetAgenda: Boolean!
+}
+
+type SCYearlyReport {
+	_id: ID!
+	year: String
+	SCSessions: [SCSession]
+	hasStatistics: Boolean!
+	statistics: Statistics
+}
+
+extend type Query {
+	SCSessions: [SCSession!]
+	SCSessionsByYear(year: String!): [SCSession!]
+	SCSession(_id: ID!): SCSession!
+	activeSCSession: SCSession
+	SCSessionsStatistics(_id: ID!): Boolean!
+	SCYearlyReportStatistics(year: String!): SCYearlyReport!
+	SCYearlyReports: [SCYearlyReport]!
+	SCYearlyReportsForStats: [SCYearlyReport]!
+}
+
+input addSCSessionInput {
+	submissionsStartDate: Date!
+	submissionsEndDate: Date!
+	mettingDate: Date!
+}
+
+input setMettingAgendaInput {
+	SCSessionID: ID!
+	mettingAgenda: [String!]!
+}
+
+extend type Mutation {
+	addSCSession(input: addSCSessionInput!): SCSession!
+	setMettingAgenda(input: setMettingAgendaInput): SCSession!
+}

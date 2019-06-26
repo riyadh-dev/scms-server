@@ -1,0 +1,24 @@
+type ConfirmationApplication implements Application {
+	_id: ID!
+	applicant: User!
+	reviews: [Review]
+	refuses: Int!
+	accepts: Int!
+	submittedAt: Date!
+	treated: Boolean!
+	finalDecision: Boolean!
+
+	rank: String!
+	recruitmentDate: Date!
+	teachingActivitiesLink: String!
+}
+
+input ConfirmationApplicationInput {
+	rank: String!
+	recruitmentDate: Date!
+	teachingActivitiesFile: Upload!
+}
+
+extend type Mutation {
+	submitConfirmationApplication(input: ConfirmationApplicationInput!): ConfirmationApplication!
+}

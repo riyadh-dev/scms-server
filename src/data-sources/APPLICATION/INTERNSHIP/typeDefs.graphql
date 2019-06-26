@@ -1,0 +1,32 @@
+type InternshipApplication implements Application {
+	_id: ID!
+	applicant: User!
+	reviews: [Review]
+	refuses: Int!
+	accepts: Int!
+	submittedAt: Date!
+	treated: Boolean!
+	finalDecision: Boolean!
+
+	laboratoryName: String!
+	laboratoryWebsite: String!
+	country: String!
+	city: String!
+	durationFrom: Date!
+	durationTo: Date!
+	workPlanLink: String!
+}
+
+input InternshipApplicationInput {
+	laboratoryName: String!
+	laboratoryWebsite: String!
+	country: String!
+	city: String!
+	durationFrom: Date!
+	durationTo: Date!
+	workPlanFile: Upload!
+}
+
+extend type Mutation {
+	submitInternshipApplication(input: InternshipApplicationInput!): InternshipApplication!
+}

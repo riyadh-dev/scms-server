@@ -1,0 +1,28 @@
+type Announcement {
+	_id: ID!
+	title: String
+	content: String
+	createdAt: Date!
+	updatedAt: Date!
+}
+
+input AddAnnouncementInput {
+	title: String
+	content: String
+}
+
+input EditAnnouncementInput {
+	announcementID: ID!
+	title: String
+	content: String
+}
+
+extend type Query {
+	announcements: [Announcement]!
+}
+
+extend type Mutation {
+	addAnnouncement(input: AddAnnouncementInput!): Announcement!
+	editAnnouncement(input: EditAnnouncementInput!): Announcement!
+	deleteAnnouncement(_id: ID!): Boolean!
+}

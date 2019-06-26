@@ -1,11 +1,12 @@
 const express = require('express');
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer, AuthenticationError } = require('apollo-server-express');
 const mongoose = require('mongoose');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 const compression = require('compression');
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
+const schemaDirectives = require('./graphql/directives');
 
 mongoose.connect(
 	process.env.MONGODB_URL,
@@ -15,21 +16,20 @@ mongoose.connect(
 		useFindAndModify: false
 	}
 )
-	.then(() => console.log('Conected to UniversityDB'))
-	.catch(error => console.error('Conection to UniversityDB failed:', error.message));
+	.then(() => console.log('Conected to DB'))
+	.catch(error => console.error('Conection to DB failed:', error.message));
 
 const context = ({ req }) => {
 	try {
 		const token = req.headers.authorization;
 		if (token) {
-			return jwt.verify(token, process.env.JWT_SECRET);
+			const user = jwt.verify(token, process.env.JWT_SECRET);
+			return { user };
 		} else {
-			//console.log('no token');
 			return null;
 		}
-	} catch (e) {
-		console.error(e.message);
-		return null;
+	} catch (error) {
+		throw new AuthenticationError(error.message);
 	}
 };
 //TODO disable interscoping 
@@ -37,6 +37,7 @@ const server = new ApolloServer({
 	typeDefs,
 	resolvers,
 	context,
+	schemaDirectives
 	// TODO formatError
 });
 
@@ -47,10 +48,12 @@ app.use(express.static(path.join(__dirname, '../../client/build')));
 
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
 
-server.applyMiddleware({ app, cors: { 
-	origin: process.env.ORIGIN,
-	credentials: true
-}});
+server.applyMiddleware({
+	app, cors: {
+		origin: process.env.ORIGIN,
+		credentials: true
+	}
+});
 
 app.get('/*', (_, res) => {
 	res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));

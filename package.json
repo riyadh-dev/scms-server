@@ -6,27 +6,31 @@
 	"scripts": {
 		"dev-server": "nodemon -r dotenv/config index.js",
 		"debug-server": "nodemon inspect -r dotenv/config index.js",
+		"gen-mock-data": "node -r dotenv/config genMockData.js",
 		"start": "node index.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Baatchia Riyadh",
 	"license": "ISC",
 	"dependencies": {
-		"apollo-server-express": "^2.5.0",
+		"apollo-server-express": "^2.6.3",
 		"bcryptjs": "^2.4.3",
+		"cloudinary": "^1.14.0",
 		"compression": "^1.7.4",
+		"dayjs": "^1.8.14",
 		"deepmerge": "^3.2.0",
 		"express": "^4.17.1",
 		"graphql": "^14.3.1",
 		"jsonwebtoken": "^8.5.1",
 		"lodash": "^4.17.11",
-		"mongoose": "^5.5.11"
+		"mongoose": "^5.5.15",
+		"uuid": "^3.3.2"
 	},
 	"engines": {
 		"node": ">=7.6.0"
 	},
 	"devDependencies": {
-		"faker": "^4.1.0",
-		"dotenv": "^8.0.0"
+		"dotenv": "^8.0.0",
+		"faker": "^4.1.0"
 	}
 }

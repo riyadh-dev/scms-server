@@ -1,41 +1,41 @@
-type CommunicationPaper {
-	title: String!
-	abstract: String!
-}
-
 type ConfrenceApplication implements Application {
 	_id: ID!
 	applicant: User!
-	submissionYear: String!
 	reviews: [Review]
 	refuses: Int!
 	accepts: Int!
+	submittedAt: Date!
+	treated: Boolean!
 	finalDecision: Boolean!
 
 	name: String!
-	communicationPaper: CommunicationPaper!
+	communicationPaperTitle: String!
+	communicationPaperAbstract: String!
 	location: String!
-	date: String!
+	date: Date!
 	website: String!
 }
 
-input CommunicationPaperInput {
-	title: String!
-	abstract: String!
-}
-
-input ConfrenceApplicationInput {
+input SubmitConfrenceApplicationInput {
 	name: String!
-	communicationPaper: CommunicationPaperInput!
+	communicationPaperTitle: String!
+	communicationPaperAbstract: String!
 	location: String!
-	date: String!
+	date: Date!
 	website: String!
 }
 
-extend type Query {
-	confrenceApplications: [ConfrenceApplication!]
+input ReSubmitConfrenceApplicationInput {
+	applicationID: ID!
+	name: String!
+	communicationPaperTitle: String!
+	communicationPaperAbstract: String!
+	location: String!
+	date: Date!
+	website: String!
 }
 
 extend type Mutation {
-	submitConfrenceApplication(input: ConfrenceApplicationInput!): ConfrenceApplication!
+	submitConfrenceApplication(input: SubmitConfrenceApplicationInput!): ConfrenceApplication!
+	reSubmitConfrenceApplication(input: ReSubmitConfrenceApplicationInput!): ConfrenceApplication!
 }
