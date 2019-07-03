@@ -16,6 +16,7 @@ type Review {
 interface Application {
 	_id: ID!
 	applicant: User!
+	session: Session!
 	reviews: [Review]
 	refuses: Int!
 	accepts: Int!
@@ -24,18 +25,16 @@ interface Application {
 	finalDecision: Boolean!
 }
 
-input applicationsBySCSessionAndTypeInput {
+input applicationsBySessionAndTypeInput {
 	applicationType: ApplicationType, 
-	SCSessionID: ID!
+	SessionID: ID!
 }
 
 extend type Query {
 	applications: [Application]
 	application(_id: ID!): Application
 	applicationsByApplicant(_id: ID!): [Application]
-	applicationsByType(applicationType: ApplicationType): [Application]
-	applicationsBySCSession(_id: ID!): [Application]
-	applicationsBySCSessionAndType(input: applicationsBySCSessionAndTypeInput): [Application]
+	applicationsBySessionAndType(input: applicationsBySessionAndTypeInput): [Application]
 }
 
 input reviewApplicationInput {
@@ -49,7 +48,7 @@ input giveApplicationFinalDecisionInput {
 	finalDecision: Boolean!
 }
 
-extend type Mutation {
+type Mutation {
 	reviewApplication(input: reviewApplicationInput!): Application!
 	giveApplicationFinalDecision(input: giveApplicationFinalDecisionInput!): Application!
 }

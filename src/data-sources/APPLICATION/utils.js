@@ -1,7 +1,6 @@
-const { createWriteStream, readdirSync, createReadStream } = require('fs');
+const { createWriteStream, readdirSync } = require('fs');
 const uuidv4 = require('uuid/v4');
-const SCYearlyReport = require('../SC_SESSION/model');
-const cloudinary = require('cloudinary').v2;
+const YearlyReport = require('../YEARLY_REPORT/model');
 const { ForbiddenError } = require('apollo-server-express');
 const AddThesisCoSupervisorApplication = require('./ADD_THESIS_CO_SUPERVISOR/model');
 const ConferenceApplication = require('./CONFRENCE/model');
@@ -28,26 +27,17 @@ const storeUploadLocaly = readStream => {
 	);
 };
 
-const storeUploadInCloud = (readStream, callbackFunc) => {
-	const writeStream = cloudinary.uploader.upload_stream((error, result) => {
-		return callbackFunc(result);
-	});
-	readStream
-		.on('data', data => writeStream.write(data))
-		.on('end', () => writeStream.end());
-};
-
 const canUserSubmit = async (userID, applicationType) => {
 	const now = new Date();
 	const year = now.getFullYear().toString();
-	const anSCYearlyReport = await SCYearlyReport.findOne({ year });
-	if (!anSCYearlyReport) return null;
-	const activeSCSession = anSCYearlyReport.SCSessions.filter(SCSession =>
-		SCSession.submissionsStartDate < now &&
-		SCSession.mettingDate > now
+	const yearlyReport = await YearlyReport.findOne({ year });
+	if (!yearlyReport) return null;
+	const activeSession = yearlyReport.sessions.filter(session =>
+		session.submissionsStartDate < now &&
+		session.mettingDate > now
 	)[0];
 
-	if (!activeSCSession)
+	if (!activeSession)
 		throw new ForbiddenError('Submissions Are Closed');
 
 	const Application = {
@@ -61,17 +51,16 @@ const canUserSubmit = async (userID, applicationType) => {
 
 	const didSubmit = await Application[applicationType].findOne({
 		applicant: userID,
-		SCSession: activeSCSession._id
+		session: activeSession._id
 	});
 
 	if (didSubmit)
 		throw new ForbiddenError('You Already Submited');
 
-	return activeSCSession;
+	return activeSession;
 };
 
 module.exports = {
 	storeUploadLocaly,
-	storeUploadInCloud,
 	canUserSubmit
 };

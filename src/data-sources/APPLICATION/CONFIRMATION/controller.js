@@ -4,7 +4,7 @@ const { canUserSubmit } = require('../utils');
 
 module.exports = {
 	submitConfirmationApplication: async (input, context) => {
-		const activeSCSession = await canUserSubmit(context.user._id, 'CONFIRMATION');
+		const activeSession = await canUserSubmit(context.user._id, 'CONFIRMATION');
 		const { teachingActivitiesFile, ...applicationFields } = input;
 		const { createReadStream } = await teachingActivitiesFile;
 
@@ -13,14 +13,14 @@ module.exports = {
 
 		return await ConfirmationApplication.create({
 			applicant: context.user._id,
-			SCSession: activeSCSession._id,
+			session: activeSession._id,
 			...applicationFields,
 			teachingActivitiesLink: link
 		});
 	},
 
-	/* 	updateConfirmationApplication: async (input, context) => {
-		const { teachingActivitiesFile, applicationID: _id, ...applicationFields } = input;
+	reSubmitConfirmationApplication: async (input) => {
+		const { applicationID: _id, teachingActivitiesFile, ...applicationFields } = input;
 		const { createReadStream } = await teachingActivitiesFile;
 
 		const readStream = createReadStream();
@@ -28,23 +28,7 @@ module.exports = {
 
 		return await ConfirmationApplication.findByIdAndUpdate(_id, {
 			...applicationFields,
-		});
-	}, */
-
-	/* 	submitConfirmationApplication: async (input, context) => {
-			const { teachingActivitiesFile, ...applicationFields } = input;
-			const { createReadStream } = await teachingActivitiesFile;
-	
-			const readStream = createReadStream();
-			const run = storeUploadInCloud(readStream, async res => {
-				return await ConfirmationApplication.create({
-					applicant: context.user._id,
-					...applicationFields,
-					teachingActivitiesLink: 'link'
-				});
-			});
-			console.log(run);
-			return run;
-	
-		} */
+			teachingActivitiesLink: link
+		}, { new: true });
+	}
 };

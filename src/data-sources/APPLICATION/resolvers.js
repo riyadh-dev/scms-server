@@ -10,9 +10,7 @@ module.exports = {
 		applications: () => Controller.getApplications(),
 		application: (_, { _id }) => Controller.getApplication(_id),
 		applicationsByApplicant: (_, { _id }) => Controller.getApplicationsByApplicant(_id),
-		applicationsByType: (_, { applicationType }) => Controller.getApplicationsByType(applicationType),
-		applicationsBySCSession: (_, { _id }) => Controller.getApplicationsBySCSession(_id),
-		applicationsBySCSessionAndType: (_, { input }) => Controller.getApplicationsBySCSessionAndType(input)
+		applicationsBySessionAndType: (_, { input }) => Controller.getApplicationsBySessionAndType(input)
 	},
 	Mutation: {
 		reviewApplication: (_, { input }, context) => Controller.reviewApplication(input, context),

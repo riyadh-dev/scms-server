@@ -1,6 +1,7 @@
 type InternshipApplication implements Application {
 	_id: ID!
 	applicant: User!
+	session: Session!
 	reviews: [Review]
 	refuses: Int!
 	accepts: Int!
@@ -17,7 +18,18 @@ type InternshipApplication implements Application {
 	workPlanLink: String!
 }
 
-input InternshipApplicationInput {
+input SubmitInternshipApplicationInput {
+	laboratoryName: String!
+	laboratoryWebsite: String!
+	country: String!
+	city: String!
+	durationFrom: Date!
+	durationTo: Date!
+	workPlanFile: Upload!
+}
+
+input ReSubmitInternshipApplicationInput {
+	applicationID: ID!
 	laboratoryName: String!
 	laboratoryWebsite: String!
 	country: String!
@@ -28,5 +40,6 @@ input InternshipApplicationInput {
 }
 
 extend type Mutation {
-	submitInternshipApplication(input: InternshipApplicationInput!): InternshipApplication!
+	submitInternshipApplication(input: SubmitInternshipApplicationInput!): InternshipApplication!
+	reSubmitInternshipApplication(input: ReSubmitInternshipApplicationInput!): InternshipApplication!
 }

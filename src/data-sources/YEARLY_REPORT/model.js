@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const dayjs = require('dayjs');
 
 const statisticsByApplicationType = {
 	applications: Number,
@@ -26,30 +27,32 @@ const statistics = {
 	thesisTitleChangeApplication: statisticsByApplicationType,
 };
 
-const SCSessionSchema = new Schema({
+const sessionSchema = new Schema({
 	submissionsStartDate: Date,
 	submissionsEndDate: Date,
 	mettingDate: Date,
 	mettingAgenda: [String],
-	hasStatistics: { type: Boolean, default: false },
-	statistics
 });
 
-SCSessionSchema.virtual('canSubmit').get(function () {
+sessionSchema.virtual('onSubmissionPeriod').get(function () {
 	const now = Date.now();
-	return this.submissionsStartDate < now && this.submissionsEndDate > now ? true : false;
+	return this.submissionsStartDate < now && this.submissionsEndDate > now;
 });
 
-SCSessionSchema.virtual('canSetAgenda').get(function () {
+sessionSchema.virtual('onReviewPeriod').get(function () {
 	const now = Date.now();
-	return this.mettingDate > now && this.submissionsEndDate < now ? true : false;
+	return this.submissionsEndDate < now && this.mettingDate > now;
 });
 
-const SCYearlyReportSchema = new Schema({
+sessionSchema.virtual('onMettingDate').get(function () {
+	const now = Date.now();
+	return dayjs(this.mettingDate).isSame(now, 'day');
+});
+
+const yearlyReportSchema = new Schema({
 	year: { type: String, index: true },
-	SCSessions: [SCSessionSchema],
-	hasStatistics: { type: Boolean, default: false },
+	sessions: [sessionSchema],
 	statistics
 });
 
-module.exports = model('SCYearlyReport', SCYearlyReportSchema);
+module.exports = model('YearlyReport', yearlyReportSchema);

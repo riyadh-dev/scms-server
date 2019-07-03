@@ -24,7 +24,7 @@ type Statistics {
 	thesisTitleChangeApplication: StatisticsByApplicationType!
 }
 
-type SCSession {
+type Session {
 	_id: ID!
 	submissionsStartDate: Date!
 	submissionsEndDate: Date!
@@ -32,41 +32,36 @@ type SCSession {
 	mettingAgenda: [String]!
 	hasStatistics: Boolean!
 	statistics: Statistics
-	canSubmit: Boolean!
-	canSetAgenda: Boolean!
+	onSubmissionPeriod: Boolean!
+	onReviewPeriod: Boolean!
+	onMettingDate: Boolean!
 }
 
-type SCYearlyReport {
+type YearlyReport {
 	_id: ID!
 	year: String
-	SCSessions: [SCSession]
-	hasStatistics: Boolean!
+	sessions: [Session]
 	statistics: Statistics
 }
 
 extend type Query {
-	SCSessions: [SCSession!]
-	SCSessionsByYear(year: String!): [SCSession!]
-	SCSession(_id: ID!): SCSession!
-	activeSCSession: SCSession
-	SCSessionsStatistics(_id: ID!): Boolean!
-	SCYearlyReportStatistics(year: String!): SCYearlyReport!
-	SCYearlyReports: [SCYearlyReport]!
-	SCYearlyReportsForStats: [SCYearlyReport]!
+	activeSession: Session
+	yearlyReportStatistics(year: String!): YearlyReport!
+	yearlyReports: [YearlyReport]!
 }
 
-input addSCSessionInput {
+input addSessionInput {
 	submissionsStartDate: Date!
 	submissionsEndDate: Date!
 	mettingDate: Date!
 }
 
 input setMettingAgendaInput {
-	SCSessionID: ID!
+	sessionID: ID!
 	mettingAgenda: [String!]!
 }
 
 extend type Mutation {
-	addSCSession(input: addSCSessionInput!): SCSession!
-	setMettingAgenda(input: setMettingAgendaInput): SCSession!
+	addSession(input: addSessionInput!): Session!
+	setMettingAgenda(input: setMettingAgendaInput): Session!
 }

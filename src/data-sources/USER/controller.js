@@ -4,24 +4,13 @@ const User = require('./model');
 const { UserInputError } = require('apollo-server-express');
 
 module.exports = {
-
 	getUsers: async () => {
 		const users = await User.find();
 		return users;
 	},
 
-	getUsersByRole: async role => {
-		const users = await User.find({ roles: role });
-		return users;
-	},
-
 	getUserByID: async (_id) => {
 		const user = await User.findById(_id);
-		return user;
-	},
-
-	getUserByEmail: async email => {
-		const user = await User.findOne({ email: email });
 		return user;
 	},
 
@@ -43,22 +32,5 @@ module.exports = {
 
 		return token;
 	},
-
-	addUser: async input => {
-		const userAlreadyExists = await User.findOne({ email: input.email }, '_id');
-		if (userAlreadyExists)
-			throw new UserInputError('email taken', { field: 'email' });
-
-		return await User.create(input);
-	},
-
-	updateUser: async (input, { _id }) => {
-		return await User.findByIdAndUpdate(_id, input, { new: true });
-	},
-
-	deleteUser: async _id => {
-		await User.findByIdAndDelete(_id);
-		return 'Success';
-	}
 };
 

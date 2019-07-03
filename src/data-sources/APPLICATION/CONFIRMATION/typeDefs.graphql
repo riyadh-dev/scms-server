@@ -1,6 +1,7 @@
 type ConfirmationApplication implements Application {
 	_id: ID!
 	applicant: User!
+	session: Session!
 	reviews: [Review]
 	refuses: Int!
 	accepts: Int!
@@ -13,12 +14,20 @@ type ConfirmationApplication implements Application {
 	teachingActivitiesLink: String!
 }
 
-input ConfirmationApplicationInput {
+input SubmitConfirmationApplicationInput {
+	rank: String!
+	recruitmentDate: Date!
+	teachingActivitiesFile: Upload!
+}
+
+input ReSubmitConfirmationApplicationInput {
+	applicationID: ID!
 	rank: String!
 	recruitmentDate: Date!
 	teachingActivitiesFile: Upload!
 }
 
 extend type Mutation {
-	submitConfirmationApplication(input: ConfirmationApplicationInput!): ConfirmationApplication!
+	submitConfirmationApplication(input: SubmitConfirmationApplicationInput!): ConfirmationApplication!
+	reSubmitConfirmationApplication(input: ReSubmitConfirmationApplicationInput!): ConfirmationApplication!
 }

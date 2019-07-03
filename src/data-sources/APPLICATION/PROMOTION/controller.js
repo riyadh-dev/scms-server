@@ -4,7 +4,7 @@ const { canUserSubmit } = require('../utils');
 
 module.exports = {
 	submitPromotionApplication: async (input, context) => {
-		const activeSCSession = await canUserSubmit(context.user._id, 'PROMOTION');
+		const activeSession = await canUserSubmit(context.user._id, 'PROMOTION');
 		const { teachingActivitiesFile, ...applicationFields } = input;
 		const { createReadStream } = await teachingActivitiesFile;
 
@@ -13,9 +13,22 @@ module.exports = {
 
 		return await PromotionApplication.create({
 			applicant: context.user._id,
-			SCSession: activeSCSession._id,
+			session: activeSession._id,
 			...applicationFields,
 			teachingActivitiesLink: link
 		});
+	},
+
+	reSubmitPromotionApplication: async (input) => {
+		const { applicationID: _id, teachingActivitiesFile, ...applicationFields } = input;
+		const { createReadStream } = await teachingActivitiesFile;
+
+		const readStream = createReadStream();
+		const { link } = await storeUploadLocaly(readStream);
+
+		return await PromotionApplication.findByIdAndUpdate(_id, {
+			...applicationFields,
+			teachingActivitiesLink: link
+		}, { new: true });
 	}
 };

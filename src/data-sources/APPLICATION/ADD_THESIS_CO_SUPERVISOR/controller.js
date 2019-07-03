@@ -3,10 +3,10 @@ const { canUserSubmit } = require('../utils');
 
 module.exports = {
 	submitAddThesisCoSupervisorApplication: async (input, context) => {
-		const activeSCSession = await canUserSubmit(context.user._id, 'ADD_THESIS_CO_SUPERVISOR');
+		const activeSession = await canUserSubmit(context.user._id, 'ADD_THESIS_CO_SUPERVISOR');
 		const app =  await AddThesisCoSupervisorApplication.create({
 			applicant: context.user._id,
-			SCSession: activeSCSession._id,
+			session: activeSession._id,
 			...input
 		});
 		return app;

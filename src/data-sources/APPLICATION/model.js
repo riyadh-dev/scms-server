@@ -12,7 +12,7 @@ const applicationSchema = new Schema({
 	finalDecision: { type: Boolean, default: false },
 	treated: { type: Boolean, default: false },
 	submittedAt: { type: Date, default: Date.now() },
-	SCSession: { type: Schema.Types.ObjectId, ref: 'SCSession' },
+	session: { type: Schema.Types.ObjectId, ref: 'Session' },
 }, { discriminatorKey: 'type' });
 
 applicationSchema.virtual('accepts').get(function () {

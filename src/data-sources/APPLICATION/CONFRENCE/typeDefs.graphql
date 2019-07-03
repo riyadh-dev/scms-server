@@ -1,6 +1,7 @@
 type ConfrenceApplication implements Application {
 	_id: ID!
 	applicant: User!
+	session: Session!
 	reviews: [Review]
 	refuses: Int!
 	accepts: Int!

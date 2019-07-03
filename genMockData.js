@@ -6,7 +6,7 @@ const ConfrenceApplication = require('./src/data-sources/APPLICATION/CONFRENCE/m
 const Application = require('./src/data-sources/APPLICATION/model');
 const PromotionApplication = require('./src/data-sources/APPLICATION/PROMOTION/model');
 const ConfirmationApplication = require('./src/data-sources/APPLICATION/CONFIRMATION/model');
-const SCYearly = require('./src/data-sources/SC_SESSION/model');
+const YearlyReport = require('./src/data-sources/YEARLY_REPORT/model');
 const Announcements = require('./src/data-sources/ANNOUNCEMENT/model');
 const faker = require('faker');
 const { connect } = require('mongoose');
@@ -56,7 +56,7 @@ const genUsers = async (number, roles) => {
 	return users;
 };
 
-const genAddThesisCoSupervisorApplications = async (number, applicants, SCSessionID, submissionsStartDate, submissionsEndDate) => {
+const genAddThesisCoSupervisorApplications = async (number, applicants, sessionID, submissionsStartDate, submissionsEndDate) => {
 	const addThesisCoSupervisorApplications = [];
 	for (let i = 0; i < number; i++) {
 		const addThesisCoSupervisorApplication = await AddThesisCoSupervisorApplication.create({
@@ -68,7 +68,7 @@ const genAddThesisCoSupervisorApplications = async (number, applicants, SCSessio
 			treated: true,
 			finalDecision: faker.random.boolean(),
 			submittedAt: faker.date.between(submissionsStartDate, submissionsEndDate),
-			SCSession: SCSessionID,
+			session: sessionID,
 			applicant: applicants[i]._id
 		});
 		addThesisCoSupervisorApplications.push(addThesisCoSupervisorApplication);
@@ -76,7 +76,7 @@ const genAddThesisCoSupervisorApplications = async (number, applicants, SCSessio
 	return addThesisCoSupervisorApplications;
 };
 
-const genConfrenceApplications = async (number, applicants, SCSessionID, submissionsStartDate, submissionsEndDate) => {
+const genConfrenceApplications = async (number, applicants, sessionID, submissionsStartDate, submissionsEndDate) => {
 	const confrenceApplications = [];
 	for (let i = 0; i < number; i++) {
 		const confrenceApplication = await ConfrenceApplication.create({
@@ -90,7 +90,7 @@ const genConfrenceApplications = async (number, applicants, SCSessionID, submiss
 			treated: true,
 			finalDecision: faker.random.boolean(),
 			submittedAt: faker.date.between(submissionsStartDate, submissionsEndDate),
-			SCSession: SCSessionID,
+			session: sessionID,
 			applicant: applicants[i]._id
 		});
 		confrenceApplications.push(confrenceApplication);
@@ -98,7 +98,7 @@ const genConfrenceApplications = async (number, applicants, SCSessionID, submiss
 	return confrenceApplications;
 };
 
-const genInternshipApplications = async (number, applicants, SCSessionID, submissionsStartDate, submissionsEndDate) => {
+const genInternshipApplications = async (number, applicants, sessionID, submissionsStartDate, submissionsEndDate) => {
 	const internshipApplications = [];
 	for (let i = 0; i < number; i++) {
 		const internshipApplication = await InternshipApplication.create({
@@ -113,7 +113,7 @@ const genInternshipApplications = async (number, applicants, SCSessionID, submis
 			treated: true,
 			finalDecision: faker.random.boolean(),
 			submittedAt: faker.date.between(submissionsStartDate, submissionsEndDate),
-			SCSession: SCSessionID,
+			session: sessionID,
 			applicant: applicants[i]._id
 		});
 		internshipApplications.push(internshipApplication);
@@ -121,7 +121,7 @@ const genInternshipApplications = async (number, applicants, SCSessionID, submis
 	return internshipApplications;
 };
 
-const genThesisTitleChangeApplications = async (number, applicants, SCSessionID, submissionsStartDate, submissionsEndDate) => {
+const genThesisTitleChangeApplications = async (number, applicants, sessionID, submissionsStartDate, submissionsEndDate) => {
 	const thesisTitleChangeApplications = [];
 	for (let i = 0; i < number; i++) {
 		const thesisTitleChangeApplication = await ThesisTitleChangeApplication.create({
@@ -134,7 +134,7 @@ const genThesisTitleChangeApplications = async (number, applicants, SCSessionID,
 			treated: true,
 			finalDecision: faker.random.boolean(),
 			submittedAt: faker.date.between(submissionsStartDate, submissionsEndDate),
-			SCSession: SCSessionID,
+			session: sessionID,
 			applicant: applicants[i]._id
 		});
 		thesisTitleChangeApplications.push(thesisTitleChangeApplication);
@@ -142,7 +142,7 @@ const genThesisTitleChangeApplications = async (number, applicants, SCSessionID,
 	return thesisTitleChangeApplications;
 };
 
-const genPromotionApplications = async (number, applicants, SCSessionID, submissionsStartDate, submissionsEndDate) => {
+const genPromotionApplications = async (number, applicants, sessionID, submissionsStartDate, submissionsEndDate) => {
 	const promotionApplications = [];
 	for (let i = 0; i < number; i++) {
 		const promotionApplication = await PromotionApplication.create({
@@ -157,7 +157,7 @@ const genPromotionApplications = async (number, applicants, SCSessionID, submiss
 			treated: true,
 			finalDecision: faker.random.boolean(),
 			submittedAt: faker.date.between(submissionsStartDate, submissionsEndDate),
-			SCSession: SCSessionID,
+			session: sessionID,
 			applicant: applicants[i]._id
 		});
 		promotionApplications.push(promotionApplication);
@@ -165,7 +165,7 @@ const genPromotionApplications = async (number, applicants, SCSessionID, submiss
 	return promotionApplications;
 };
 
-const genConfirmationApplication = async (number, applicants, SCSessionID, submissionsStartDate, submissionsEndDate) => {
+const genConfirmationApplication = async (number, applicants, sessionID, submissionsStartDate, submissionsEndDate) => {
 	const confirmationApplications = [];
 	for (let i = 0; i < number; i++) {
 		const confirmationApplication = await ConfirmationApplication.create({
@@ -176,7 +176,7 @@ const genConfirmationApplication = async (number, applicants, SCSessionID, submi
 			treated: true,
 			finalDecision: faker.random.boolean(),
 			submittedAt: faker.date.between(submissionsStartDate, submissionsEndDate),
-			SCSession: SCSessionID,
+			session: sessionID,
 			applicant: applicants[i]._id
 		});
 		confirmationApplications.push(confirmationApplication);
@@ -214,24 +214,24 @@ const genData = async () => {
 			title: faker.lorem.sentence(4),
 			content: faker.lorem.paragraph()
 		});
-		const SCYearlyReport = await SCYearly.create({ year });
+		const yearlyReport = await YearlyReport.create({ year });
 		for (let i = 0; i < 6; i++) {
 			const submissionsStartDate = dayjs(year.toString()).add(3 * i, 'month');
 			const submissionsEndDate = dayjs(submissionsStartDate).add(3, 'month').subtract(1, 'week');
 			const mettingDate = dayjs(submissionsEndDate);
 
-			const SCSession = {
+			const session = {
 				submissionsStartDate,
 				submissionsEndDate,
 				mettingDate
 			};
 
-			SCYearlyReport.SCSessions.unshift(SCSession);
-			const SCSessionID = SCYearlyReport.SCSessions[0]._id;
+			yearlyReport.sessions.unshift(session);
+			const sessionID = yearlyReport.sessions[0]._id;
 
 			const commonArgs = [
 				faker.random.arrayElement(fmsArray),
-				SCSessionID,
+				sessionID,
 				submissionsStartDate,
 				submissionsEndDate,
 			];
@@ -255,7 +255,7 @@ const genData = async () => {
 			]);
 
 		}
-		SCYearlyReport.save();
+		yearlyReport.save();
 	}
 };
 
@@ -272,6 +272,7 @@ connect(
 		await genUsers(1, ['FACULTY_MEMBER', 'SC_PRESIDENT']);
 		await genData();
 		console.log('Gen Data Complete');
+		// eslint-disable-next-line no-process-exit
 		process.exit(0);
 	})
 	.catch(error => console.error('failed:', error));

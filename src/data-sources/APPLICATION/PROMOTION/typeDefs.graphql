@@ -1,6 +1,7 @@
 type PromotionApplication implements Application {
 	_id: ID!
 	applicant: User!
+	session: Session!
 	reviews: [Review]
 	refuses: Int!
 	accepts: Int!
@@ -17,7 +18,18 @@ type PromotionApplication implements Application {
 	teachingActivitiesLink: String!
 }
 
-input PromotionApplicationInput {
+input SubmitPromotionApplicationInput {
+	recruitmentDate: Date!
+	confirmationDate: Date!
+	currentRank: String!
+	desiredRank: String!
+	PhDRegistrationsNumber: String!
+	lastPhDRegistrationYear: String!
+	teachingActivitiesFile: Upload!
+}
+
+input ReSubmitPromotionApplicationInput {
+	applicationID: ID!
 	recruitmentDate: Date!
 	confirmationDate: Date!
 	currentRank: String!
@@ -28,5 +40,6 @@ input PromotionApplicationInput {
 }
 
 extend type Mutation {
-	submitPromotionApplication(input: PromotionApplicationInput!): PromotionApplication!
+	submitPromotionApplication(input: SubmitPromotionApplicationInput!): PromotionApplication!
+	reSubmitPromotionApplication(input: ReSubmitPromotionApplicationInput!): PromotionApplication!
 }
