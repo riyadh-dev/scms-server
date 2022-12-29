@@ -39,7 +39,6 @@ const server = new ApolloServer({
 const app = express();
 app.disable('x-powered-by');
 app.use(compression());
-app.use(express.static(path.join(__dirname, '../../client/build')));
 
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
 
@@ -49,10 +48,6 @@ server.applyMiddleware({
 		origin: process.env.ORIGIN,
 		credentials: true,
 	},
-});
-
-app.get('/*', (_, res) => {
-	res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
 });
 
 app.listen(process.env.PORT, () =>
