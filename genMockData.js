@@ -2,7 +2,7 @@ const User = require('./src/data-sources/USER/model');
 const InternshipApplication = require('./src/data-sources/APPLICATION/INTERNSHIP/model');
 const AddThesisCoSupervisorApplication = require('./src/data-sources/APPLICATION/ADD_THESIS_CO_SUPERVISOR/model');
 const ThesisTitleChangeApplication = require('./src/data-sources/APPLICATION/THESIS_TITLE_CHANGE/model');
-const ConfrenceApplication = require('./src/data-sources/APPLICATION/CONFRENCE/model');
+const ConferenceApplication = require('./src/data-sources/APPLICATION/CONFRENCE/model');
 const Application = require('./src/data-sources/APPLICATION/model');
 const PromotionApplication = require('./src/data-sources/APPLICATION/PROMOTION/model');
 const ConfirmationApplication = require('./src/data-sources/APPLICATION/CONFIRMATION/model');
@@ -12,17 +12,9 @@ const faker = require('faker');
 const { connect } = require('mongoose');
 const dayjs = require('dayjs');
 
-const Role = [
-	'FACULTY_MEMBER',
-	'PHD_STUDENT',
-	'SC_MEMBER',
-	'SC_PRESIDENT'
-];
+const Role = ['FACULTY_MEMBER', 'PHD_STUDENT', 'SC_MEMBER', 'SC_PRESIDENT'];
 
-const Gender = [
-	'FEMALE',
-	'MALE'
-];
+const Gender = ['FEMALE', 'MALE'];
 
 const Department = [
 	'POWER_AND_CONTROL',
@@ -30,12 +22,7 @@ const Department = [
 	'FUNDAMENTAL_EDUCATION',
 ];
 
-const Major = [
-	'ELECTRONICS',
-	'POWER',
-	'CONTROL',
-	'TELECOMMUNICATION'
-];
+const Major = ['ELECTRONICS', 'POWER', 'CONTROL', 'TELECOMMUNICATION'];
 
 const genUsers = async (number, roles) => {
 	const users = [];
@@ -49,37 +36,53 @@ const genUsers = async (number, roles) => {
 			option: faker.random.word(),
 			roles,
 			email: faker.internet.email(),
-			password: 'password'
+			password: 'password',
 		});
 		users.push(facultyMember.toObject({ versionKey: false }));
 	}
 	return users;
 };
 
-const genAddThesisCoSupervisorApplications = async (number, applicants, sessionID, submissionsStartDate, submissionsEndDate) => {
+const genAddThesisCoSupervisorApplications = async (
+	number,
+	applicants,
+	sessionID,
+	submissionsStartDate,
+	submissionsEndDate
+) => {
 	const addThesisCoSupervisorApplications = [];
 	for (let i = 0; i < number; i++) {
-		const addThesisCoSupervisorApplication = await AddThesisCoSupervisorApplication.create({
-			firstPhDRegistrationYear: faker.date.past().getFullYear().toString(),
-			supervisor: faker.name.findName(),
-			coSupervisor: faker.name.findName(),
-			cause: faker.lorem.paragraph(),
+		const addThesisCoSupervisorApplication =
+			await AddThesisCoSupervisorApplication.create({
+				firstPhDRegistrationYear: faker.date.past().getFullYear().toString(),
+				supervisor: faker.name.findName(),
+				coSupervisor: faker.name.findName(),
+				cause: faker.lorem.paragraph(),
 
-			treated: true,
-			finalDecision: faker.random.boolean(),
-			submittedAt: faker.date.between(submissionsStartDate, submissionsEndDate),
-			session: sessionID,
-			applicant: applicants[i]._id
-		});
+				treated: true,
+				finalDecision: faker.random.boolean(),
+				submittedAt: faker.date.between(
+					submissionsStartDate,
+					submissionsEndDate
+				),
+				session: sessionID,
+				applicant: applicants[i]._id,
+			});
 		addThesisCoSupervisorApplications.push(addThesisCoSupervisorApplication);
 	}
 	return addThesisCoSupervisorApplications;
 };
 
-const genConfrenceApplications = async (number, applicants, sessionID, submissionsStartDate, submissionsEndDate) => {
-	const confrenceApplications = [];
+const genConferenceApplications = async (
+	number,
+	applicants,
+	sessionID,
+	submissionsStartDate,
+	submissionsEndDate
+) => {
+	const conferenceApplications = [];
 	for (let i = 0; i < number; i++) {
-		const confrenceApplication = await ConfrenceApplication.create({
+		const conferenceApplication = await ConferenceApplication.create({
 			name: faker.lorem.sentence(),
 			communicationPaperTitle: faker.lorem.sentence(),
 			communicationPaperAbstract: faker.lorem.paragraph(),
@@ -91,14 +94,20 @@ const genConfrenceApplications = async (number, applicants, sessionID, submissio
 			finalDecision: faker.random.boolean(),
 			submittedAt: faker.date.between(submissionsStartDate, submissionsEndDate),
 			session: sessionID,
-			applicant: applicants[i]._id
+			applicant: applicants[i]._id,
 		});
-		confrenceApplications.push(confrenceApplication);
+		conferenceApplications.push(conferenceApplication);
 	}
-	return confrenceApplications;
+	return conferenceApplications;
 };
 
-const genInternshipApplications = async (number, applicants, sessionID, submissionsStartDate, submissionsEndDate) => {
+const genInternshipApplications = async (
+	number,
+	applicants,
+	sessionID,
+	submissionsStartDate,
+	submissionsEndDate
+) => {
 	const internshipApplications = [];
 	for (let i = 0; i < number; i++) {
 		const internshipApplication = await InternshipApplication.create({
@@ -114,35 +123,51 @@ const genInternshipApplications = async (number, applicants, sessionID, submissi
 			finalDecision: faker.random.boolean(),
 			submittedAt: faker.date.between(submissionsStartDate, submissionsEndDate),
 			session: sessionID,
-			applicant: applicants[i]._id
+			applicant: applicants[i]._id,
 		});
 		internshipApplications.push(internshipApplication);
 	}
 	return internshipApplications;
 };
 
-const genThesisTitleChangeApplications = async (number, applicants, sessionID, submissionsStartDate, submissionsEndDate) => {
+const genThesisTitleChangeApplications = async (
+	number,
+	applicants,
+	sessionID,
+	submissionsStartDate,
+	submissionsEndDate
+) => {
 	const thesisTitleChangeApplications = [];
 	for (let i = 0; i < number; i++) {
-		const thesisTitleChangeApplication = await ThesisTitleChangeApplication.create({
-			firstPhDRegistrationYear: faker.date.past().getFullYear().toString(),
-			supervisor: faker.name.findName(),
-			currentTitle: faker.lorem.sentence(),
-			desiredTitle: faker.lorem.sentence(),
-			cause: faker.lorem.paragraph(),
+		const thesisTitleChangeApplication =
+			await ThesisTitleChangeApplication.create({
+				firstPhDRegistrationYear: faker.date.past().getFullYear().toString(),
+				supervisor: faker.name.findName(),
+				currentTitle: faker.lorem.sentence(),
+				desiredTitle: faker.lorem.sentence(),
+				cause: faker.lorem.paragraph(),
 
-			treated: true,
-			finalDecision: faker.random.boolean(),
-			submittedAt: faker.date.between(submissionsStartDate, submissionsEndDate),
-			session: sessionID,
-			applicant: applicants[i]._id
-		});
+				treated: true,
+				finalDecision: faker.random.boolean(),
+				submittedAt: faker.date.between(
+					submissionsStartDate,
+					submissionsEndDate
+				),
+				session: sessionID,
+				applicant: applicants[i]._id,
+			});
 		thesisTitleChangeApplications.push(thesisTitleChangeApplication);
 	}
 	return thesisTitleChangeApplications;
 };
 
-const genPromotionApplications = async (number, applicants, sessionID, submissionsStartDate, submissionsEndDate) => {
+const genPromotionApplications = async (
+	number,
+	applicants,
+	sessionID,
+	submissionsStartDate,
+	submissionsEndDate
+) => {
 	const promotionApplications = [];
 	for (let i = 0; i < number; i++) {
 		const promotionApplication = await PromotionApplication.create({
@@ -158,14 +183,20 @@ const genPromotionApplications = async (number, applicants, sessionID, submissio
 			finalDecision: faker.random.boolean(),
 			submittedAt: faker.date.between(submissionsStartDate, submissionsEndDate),
 			session: sessionID,
-			applicant: applicants[i]._id
+			applicant: applicants[i]._id,
 		});
 		promotionApplications.push(promotionApplication);
 	}
 	return promotionApplications;
 };
 
-const genConfirmationApplication = async (number, applicants, sessionID, submissionsStartDate, submissionsEndDate) => {
+const genConfirmationApplication = async (
+	number,
+	applicants,
+	sessionID,
+	submissionsStartDate,
+	submissionsEndDate
+) => {
 	const confirmationApplications = [];
 	for (let i = 0; i < number; i++) {
 		const confirmationApplication = await ConfirmationApplication.create({
@@ -177,7 +208,7 @@ const genConfirmationApplication = async (number, applicants, sessionID, submiss
 			finalDecision: faker.random.boolean(),
 			submittedAt: faker.date.between(submissionsStartDate, submissionsEndDate),
 			session: sessionID,
-			applicant: applicants[i]._id
+			applicant: applicants[i]._id,
 		});
 		confirmationApplications.push(confirmationApplication);
 	}
@@ -185,16 +216,16 @@ const genConfirmationApplication = async (number, applicants, sessionID, submiss
 };
 
 const voteOnApplications = (applications, voters) => {
-	applications.forEach(application => {
-		voters.forEach(async voter => {
+	applications.forEach((application) => {
+		voters.forEach(async (voter) => {
 			await Application.findByIdAndUpdate(application._id, {
 				$push: {
 					reviews: {
 						reviewer: voter._id,
 						decision: faker.random.boolean(),
-						comment: faker.lorem.paragraph()
-					}
-				}
+						comment: faker.lorem.paragraph(),
+					},
+				},
 			});
 		});
 	});
@@ -212,18 +243,20 @@ const genData = async () => {
 	for (let year = 2015; year < 2019; year++) {
 		await Announcements.create({
 			title: faker.lorem.sentence(4),
-			content: faker.lorem.paragraph()
+			content: faker.lorem.paragraph(),
 		});
 		const yearlyReport = await YearlyReport.create({ year });
 		for (let i = 0; i < 6; i++) {
 			const submissionsStartDate = dayjs(year.toString()).add(3 * i, 'month');
-			const submissionsEndDate = dayjs(submissionsStartDate).add(3, 'month').subtract(1, 'week');
+			const submissionsEndDate = dayjs(submissionsStartDate)
+				.add(3, 'month')
+				.subtract(1, 'week');
 			const mettingDate = dayjs(submissionsEndDate);
 
 			const session = {
 				submissionsStartDate,
 				submissionsEndDate,
-				mettingDate
+				mettingDate,
 			};
 
 			yearlyReport.sessions.unshift(session);
@@ -237,12 +270,30 @@ const genData = async () => {
 			];
 
 			const [app1, app2, app3, app4, app5, app6] = await Promise.all([
-				genAddThesisCoSupervisorApplications(faker.random.number({ min: 0, max: 8 }), ...commonArgs),
-				genConfirmationApplication(faker.random.number({ min: 0, max: 8 }), ...commonArgs),
-				genConfrenceApplications(faker.random.number({ min: 0, max: 8 }), ...commonArgs),
-				genInternshipApplications(faker.random.number({ min: 0, max: 8 }), ...commonArgs),
-				genPromotionApplications(faker.random.number({ min: 0, max: 8 }), ...commonArgs),
-				genThesisTitleChangeApplications(faker.random.number({ min: 0, max: 8 }), ...commonArgs)
+				genAddThesisCoSupervisorApplications(
+					faker.random.number({ min: 0, max: 8 }),
+					...commonArgs
+				),
+				genConfirmationApplication(
+					faker.random.number({ min: 0, max: 8 }),
+					...commonArgs
+				),
+				genConferenceApplications(
+					faker.random.number({ min: 0, max: 8 }),
+					...commonArgs
+				),
+				genInternshipApplications(
+					faker.random.number({ min: 0, max: 8 }),
+					...commonArgs
+				),
+				genPromotionApplications(
+					faker.random.number({ min: 0, max: 8 }),
+					...commonArgs
+				),
+				genThesisTitleChangeApplications(
+					faker.random.number({ min: 0, max: 8 }),
+					...commonArgs
+				),
 			]);
 
 			await Promise.all([
@@ -251,28 +302,24 @@ const genData = async () => {
 				voteOnApplications(app3, SCMembers),
 				voteOnApplications(app4, SCMembers),
 				voteOnApplications(app5, SCMembers),
-				voteOnApplications(app6, SCMembers)
+				voteOnApplications(app6, SCMembers),
 			]);
-
 		}
 		yearlyReport.save();
 	}
 };
 
-connect(
-	process.env.MONGODB_URL,
-	{
-		useNewUrlParser: true,
-		useCreateIndex: true,
-		useFindAndModify: false
-	}
-)
+connect(process.env.MONGODB_URI, {
+	useNewUrlParser: true,
+	useCreateIndex: true,
+	useFindAndModify: false,
+})
 	.then(async () => {
-		console.log('Conected to DB');
+		console.log('Connected to DB');
 		await genUsers(1, ['FACULTY_MEMBER', 'SC_PRESIDENT']);
 		await genData();
 		console.log('Gen Data Complete');
 		// eslint-disable-next-line no-process-exit
 		process.exit(0);
 	})
-	.catch(error => console.error('failed:', error));
+	.catch((error) => console.error('failed:', error));

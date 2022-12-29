@@ -8,16 +8,14 @@ const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
 const schemaDirectives = require('./graphql/directives');
 
-mongoose.connect(
-	process.env.MONGODB_URL,
-	{
+mongoose
+	.connect(process.env.MONGODB_URI, {
 		useNewUrlParser: true,
 		useCreateIndex: true,
-		useFindAndModify: false
-	}
-)
-	.then(() => console.log('Conected to DB'))
-	.catch(error => console.error('Conection to DB failed:', error.message));
+		useFindAndModify: false,
+	})
+	.then(() => console.log('Connected to DB'))
+	.catch((error) => console.error('Connection to DB failed:', error.message));
 
 const context = ({ req }) => {
 	try {
@@ -32,12 +30,12 @@ const context = ({ req }) => {
 		throw new AuthenticationError(error.message);
 	}
 };
-//TODO disable interscoping 
+//TODO disable interscoping
 const server = new ApolloServer({
 	typeDefs,
 	resolvers,
 	context,
-	schemaDirectives
+	schemaDirectives,
 	// TODO formatError
 });
 
@@ -49,10 +47,11 @@ app.use(express.static(path.join(__dirname, '../../client/build')));
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
 
 server.applyMiddleware({
-	app, cors: {
+	app,
+	cors: {
 		origin: process.env.ORIGIN,
-		credentials: true
-	}
+		credentials: true,
+	},
 });
 
 app.get('/*', (_, res) => {
@@ -60,8 +59,7 @@ app.get('/*', (_, res) => {
 });
 
 app.listen(process.env.PORT, () =>
-	console.log(`Server URL: http://localhost:${process.env.PORT}${server.graphqlPath}`)
+	console.log(
+		`Server URL: http://localhost:${process.env.PORT}${server.graphqlPath}`
+	)
 );
-
-
-
