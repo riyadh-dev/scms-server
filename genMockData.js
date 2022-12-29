@@ -9,8 +9,9 @@ const ConfirmationApplication = require('./src/data-sources/APPLICATION/CONFIRMA
 const YearlyReport = require('./src/data-sources/YEARLY_REPORT/model');
 const Announcements = require('./src/data-sources/ANNOUNCEMENT/model');
 const faker = require('faker');
-const { connect } = require('mongoose');
+const mongoose = require('mongoose');
 const dayjs = require('dayjs');
+mongoose.set('strictQuery', false);
 
 const Role = ['FACULTY_MEMBER', 'PHD_STUDENT', 'SC_MEMBER', 'SC_PRESIDENT'];
 
@@ -240,7 +241,9 @@ const genData = async () => {
 	]);
 	const SCMembers = await genUsers(15, ['FACULTY_MEMBER', 'SC_MEMBER']);
 
-	for (let year = 2015; year < 2019; year++) {
+	const endYear = dayjs().year() + 1;
+	const startYear = endYear - 6;
+	for (let year = startYear; year < endYear; year++) {
 		await Announcements.create({
 			title: faker.lorem.sentence(4),
 			content: faker.lorem.paragraph(),
@@ -271,27 +274,27 @@ const genData = async () => {
 
 			const [app1, app2, app3, app4, app5, app6] = await Promise.all([
 				genAddThesisCoSupervisorApplications(
-					faker.random.number({ min: 0, max: 8 }),
+					faker.random.number({ min: 1, max: 8 }),
 					...commonArgs
 				),
 				genConfirmationApplication(
-					faker.random.number({ min: 0, max: 8 }),
+					faker.random.number({ min: 1, max: 8 }),
 					...commonArgs
 				),
 				genConferenceApplications(
-					faker.random.number({ min: 0, max: 8 }),
+					faker.random.number({ min: 1, max: 8 }),
 					...commonArgs
 				),
 				genInternshipApplications(
-					faker.random.number({ min: 0, max: 8 }),
+					faker.random.number({ min: 1, max: 8 }),
 					...commonArgs
 				),
 				genPromotionApplications(
-					faker.random.number({ min: 0, max: 8 }),
+					faker.random.number({ min: 1, max: 8 }),
 					...commonArgs
 				),
 				genThesisTitleChangeApplications(
-					faker.random.number({ min: 0, max: 8 }),
+					faker.random.number({ min: 1, max: 8 }),
 					...commonArgs
 				),
 			]);
@@ -305,21 +308,26 @@ const genData = async () => {
 				voteOnApplications(app6, SCMembers),
 			]);
 		}
-		yearlyReport.save();
+
+		if (year === endYear - 1) await yearlyReport.delete();
+		else await yearlyReport.save();
 	}
 };
 
-connect(process.env.MONGODB_URI, {
-	useNewUrlParser: true,
-	useCreateIndex: true,
-	useFindAndModify: false,
-})
-	.then(async () => {
-		console.log('Connected to DB');
+const main = async () => {
+	try {
+		console.log('Connecting to DB...');
+		await mongoose.connect(process.env.MONGODB_URI);
+		console.log('Dropping DB...');
+		await mongoose.connection.db.dropDatabase();
+		console.log('Gen Data...');
 		await genUsers(1, ['FACULTY_MEMBER', 'SC_PRESIDENT']);
 		await genData();
 		console.log('Gen Data Complete');
-		// eslint-disable-next-line no-process-exit
 		process.exit(0);
-	})
-	.catch((error) => console.error('failed:', error));
+	} catch (error) {
+		console.log(error.message);
+	}
+};
+
+main();
