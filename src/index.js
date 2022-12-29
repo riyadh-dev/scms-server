@@ -8,12 +8,9 @@ const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
 const schemaDirectives = require('./graphql/directives');
 
+mongoose.set('strictQuery', false);
 mongoose
-	.connect(process.env.MONGODB_URI, {
-		useNewUrlParser: true,
-		useCreateIndex: true,
-		useFindAndModify: false,
-	})
+	.connect(process.env.MONGODB_URI)
 	.then(() => console.log('Connected to DB'))
 	.catch((error) => console.error('Connection to DB failed:', error.message));
 
